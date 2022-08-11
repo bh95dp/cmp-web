@@ -69,9 +69,11 @@ export default {
           Authorization: "Bearer " + token,
         });
         this.user = null;
+        localStorage.removeItem("cmp_token");
         this.message = data.message;
       } catch (error) {
         const err = JSON.parse(error.message);
+        localStorage.removeItem("cmp_token");
         this.error = err.message;
         setTimeout(() => {
           this.error = null;
