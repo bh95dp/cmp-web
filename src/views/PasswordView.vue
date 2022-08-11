@@ -1,27 +1,57 @@
 <script>
 import Alert from "@/components/Alert.vue";
+import Button from "@/components/Button.vue";
+import TextInput from "@/components/TextInput.vue";
 import { postFormData } from "../utils";
 
 export default {
-  components: { Alert },
+  components: {
+    Alert,
+    Button,
+    TextInput,
+  },
   data() {
     return {
+      question: "",
+      answer: "",
       password: "",
       loading: false,
       error: null,
     };
   },
   async created() {
-    await this.fetchPassword();
+    await this.fetchQuestion();
   },
   methods: {
-    async fetchPassword() {
+    async fetchQuestion() {
       this.loading = true;
-      const body = this.$router.params.token;
-      const url = import.meta.env.VITE_API_URL + "/users/password";
+      const url = import.meta.env.VITE_API_URL + "/users/question";
 
       try {
-        const data = await postFormData(url, "POST", body);
+        const data = await postFormData(url, "GET");
+        this.question = data.question;
+      } catch (error) {
+        const err = JSON.parse(error.message);
+        this.error = err.message;
+        setTimeout(() => {
+          this.error = null;
+        }, 7000);
+      } finally {
+        this.loading = false;
+      }
+    },
+    async fetchPassword() {
+      this.loading = true;
+      const token = this.$route.query.qs;
+      const url = import.meta.env.VITE_API_URL + "/users/password";
+      const values = {
+        token,
+        answer: this.answer,
+        questionId: this.question.id,
+      };
+
+      try {
+        const data = await postFormData(url, "POST", JSON.stringify(values));
         this.password = data.password;
       } catch (error) {
         const err = JSON.parse(error.message);
@@ -42,17 +72,30 @@ export default {
     <main class="wrapper">
       <h1 class="title">Welcome to Computing Masters Project</h1>
       <hr />
-      <section v-if="user">
-        <h2 class="title">Your Details</h2>
-        <Alert v-if="error" type="error" :message="error"></Alert>
-        <div class="user-details">
+      <Alert v-if="error" type="error" :message="error"></Alert>
+      <section>
+        <div v-if="password" class="user-details">
           <p>Your Password is:</p>
-          <p style="font-size: 32px; font-weight: medium; margin: 16px 0">
+          <p style="font-size: 20px; font-weight: medium; margin: 16px 0">
             {{ password }}
           </p>
         </div>
+        <template v-else>
+          <form v-if="question" @submit.prevent="fetchPassword">
+            <text-input
+              v-model="answer"
+              type="text"
+              name="answer"
+              placeholder="Your answer"
+              required
+            >
+              {{ question.text }}
+            </text-input>
+            <Button label="submit"></Button>
+          </form>
+        </template>
       </section>
-      <nav v-else>
+      <nav>
         <router-link to="/login">Login</router-link>
       </nav>
     </main>
@@ -81,7 +124,7 @@ nav a:hover {
 .user-details {
   display: flex;
   align-items: center;
-  justify-content: center;
+  flex-direction: column;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
 }
