@@ -7,6 +7,7 @@ export default {
   data() {
     return {
       user: {},
+      message: "",
       loading: false,
       error: null,
     };
@@ -53,6 +54,27 @@ export default {
         this.loading = false;
       }
     },
+    async handleLogout() {
+      this.loading = true;
+      const token = localStorage.getItem("cmp_token");
+      const url = import.meta.env.VITE_API_URL + "/users/logout";
+
+      try {
+        const data = await postFormData(url, "GET", null, {
+          Authorization: "Bearer " + token,
+        });
+        this.user = null;
+        this.message = data.message;
+      } catch (error) {
+        const err = JSON.parse(error.message);
+        this.error = err.message;
+        setTimeout(() => {
+          this.error = null;
+        }, 7000);
+      } finally {
+        this.loading = false;
+      }
+    },
   },
 };
 </script>
@@ -63,8 +85,14 @@ export default {
       <h1 class="title">Welcome to Computing Masters Project</h1>
       <hr />
       <section v-if="user">
-        <h2 class="title">Your Details</h2>
+        <div style="display: flex; align-items: center; width: 100%">
+          <h2 style="flex-grow: 1">Your Details</h2>
+          <button type="button" class="logout" @click="handleLogout">
+            Log out
+          </button>
+        </div>
         <Alert v-if="error" type="error" :message="error"></Alert>
+        <Alert v-if="message" type="success" :message="message"></Alert>
         <div
           v-for="entry in formattedUser"
           :key="entry.id"
@@ -124,7 +152,8 @@ nav a:hover {
   width: calc(50% - 16px);
 }
 
-.user-details a {
+.user-details a,
+.logout {
   background-color: transparent;
   color: #990f3d;
   font-size: 0.75rem;
@@ -138,7 +167,8 @@ nav a:hover {
   transition: background-color 120ms ease-out;
 }
 
-.user-details a:hover {
+.user-details a:hover,
+.logout:hover {
   background-color: #ece9e9;
 }
 </style>
