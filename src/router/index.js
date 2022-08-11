@@ -30,7 +30,7 @@ const router = createRouter({
       component: () => import("@/views/ChangeEmailView.vue"),
     },
     {
-      path: "/password",
+      path: "/get-password",
       name: "password",
       component: () => import("@/views/PasswordView.vue"),
     },
