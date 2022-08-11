@@ -7,6 +7,7 @@ export default {
   data() {
     return {
       user: {},
+      loggedIn: false,
       message: "",
       loading: false,
       error: null,
@@ -28,6 +29,10 @@ export default {
           value,
         };
       });
+    },
+    isLoggedIn() {
+      const token = localStorage.getItem("cmp_token");
+      return !!token && this.user;
     },
   },
   async created() {
@@ -84,7 +89,7 @@ export default {
     <main class="wrapper">
       <h1 class="title">Welcome to Computing Masters Project</h1>
       <hr />
-      <section v-if="user">
+      <section v-if="isLoggedIn">
         <div style="display: flex; align-items: center; width: 100%">
           <h2 style="flex-grow: 1">Your Details</h2>
           <button type="button" class="logout" @click="handleLogout">
