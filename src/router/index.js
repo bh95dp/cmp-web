@@ -1,8 +1,4 @@
-import {
-  createRouter,
-  createWebHashHistory,
-  createWebHistory,
-} from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
 
 const router = createRouter({
@@ -34,7 +30,7 @@ const router = createRouter({
       component: () => import("@/views/ChangeEmailView.vue"),
     },
     {
-      path: "/get-password",
+      path: "/password",
       name: "password",
       component: () => import("@/views/PasswordView.vue"),
     },
