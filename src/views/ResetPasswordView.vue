@@ -1,54 +1,27 @@
 <script>
 import Alert from "@/components/Alert.vue";
-import Button from "@/components/Button.vue";
-import TextInput from "@/components/TextInput.vue";
 import { postFormData } from "../utils";
 
 export default {
   components: {
     Alert,
-    Button,
-    TextInput,
   },
   data() {
     return {
-      question: "",
-      answer: "",
       password: "",
       loading: false,
       error: null,
     };
   },
   async created() {
-    await this.fetchQuestion();
+    await this.fetchPassword();
   },
   methods: {
-    async fetchQuestion() {
-      this.loading = true;
-      const url = import.meta.env.VITE_API_URL + "/users/question";
-
-      try {
-        const data = await postFormData(url, "GET");
-        this.question = data.question;
-      } catch (error) {
-        const err = JSON.parse(error.message);
-        this.error = err.message;
-        setTimeout(() => {
-          this.error = null;
-        }, 7000);
-      } finally {
-        this.loading = false;
-      }
-    },
     async fetchPassword() {
       this.loading = true;
       const token = this.$route.query.qs;
-      const url = import.meta.env.VITE_API_URL + "/users/get-password";
-      const values = {
-        token,
-        answer: this.answer,
-        questionId: this.question.id,
-      };
+      const url = import.meta.env.VITE_API_URL + "/users/reset-password";
+      const values = { token };
 
       try {
         const data = await postFormData(url, "POST", JSON.stringify(values));
@@ -83,20 +56,6 @@ export default {
             {{ password }}
           </p>
         </div>
-        <template v-else>
-          <form v-if="question" @submit.prevent="fetchPassword">
-            <text-input
-              v-model="answer"
-              type="text"
-              name="answer"
-              placeholder="Your answer"
-              required
-            >
-              {{ question.text }}
-            </text-input>
-            <Button label="submit"></Button>
-          </form>
-        </template>
       </section>
       <nav>
         <router-link to="/login">Login</router-link>

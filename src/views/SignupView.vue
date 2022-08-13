@@ -108,7 +108,7 @@
           v-model="sex"
           name="sex"
           placeholder="Select your sex"
-          :options="['Male', 'Female', 'Other']"
+          :options="['Male', 'Female', 'Rather not say']"
           required
         >
           Sex
@@ -169,11 +169,11 @@ export default {
           type: "number",
           placeholder: "Your Age",
         },
-        location: {
+        country: {
           value: "",
-          name: "location",
+          name: "country",
           type: "text",
-          placeholder: "Your location",
+          placeholder: "Your country",
         },
         password_reminder: {
           value: "",

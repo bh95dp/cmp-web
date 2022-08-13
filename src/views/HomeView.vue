@@ -90,6 +90,9 @@ export default {
   <div class="container">
     <main class="wrapper">
       <h1 class="title">Welcome to Computing Masters Project</h1>
+      <small style="text-align: center; display: block">for</small>
+      <h1 class="student-name">Nnamdi Adim</h1>
+      <h1 class="student-id">219060682 (bh95dp)</h1>
       <hr />
       <section v-if="isLoggedIn">
         <div style="display: flex; align-items: center; width: 100%">
@@ -177,5 +180,20 @@ nav a:hover {
 .user-details a:hover,
 .logout:hover {
   background-color: #ece9e9;
+}
+
+.title,
+.student-name,
+.student-id {
+  text-align: center;
+}
+
+.title {
+  font-size: 1rem;
+}
+
+.student-id {
+  font-size: 1.25rem;
+  font-weight: normal;
 }
 </style>
