@@ -50,7 +50,24 @@
       >
         <Alert v-if="error" type="error" :message="error"></Alert>
         <fieldset>
-          <legend>Choose your password</legend>
+          <legend class="legend">
+            Choose your password
+            <button
+              title="regenerate passwords"
+              type="button"
+              class="icon-button"
+              :disabled="loading"
+              @click="regeneratePassword"
+            >
+              <Loading v-if="loading" color="primary" />
+              <svg v-else style="width: 16px; height: 16px" viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M2 12C2 16.97 6.03 21 11 21C13.39 21 15.68 20.06 17.4 18.4L15.9 16.9C14.63 18.25 12.86 19 11 19C4.76 19 1.64 11.46 6.05 7.05C10.46 2.64 18 5.77 18 12H15L19 16H19.1L23 12H20C20 7.03 15.97 3 11 3C6.03 3 2 7.03 2 12Z"
+                />
+              </svg>
+            </button>
+          </legend>
           <div
             v-for="(item, i) in passwords"
             :key="i"
@@ -130,6 +147,7 @@
 <script>
 import Alert from "@/components/Alert.vue";
 import Button from "@/components/Button.vue";
+import Loading from "@/components/Loading.vue";
 import SelectInput from "@/components/Select.vue";
 import TextInput from "@/components/TextInput.vue";
 import { postFormData } from "../utils";
@@ -138,6 +156,7 @@ export default {
   components: {
     Alert,
     Button,
+    Loading,
     TextInput,
     SelectInput,
   },
@@ -186,6 +205,7 @@ export default {
       sentence2: "",
       sentence3: "",
       password: "",
+      loading: false,
     };
   },
   methods: {
@@ -272,11 +292,57 @@ export default {
       }
       return;
     },
+    async regeneratePassword() {
+      this.loading = true;
+      const url = import.meta.env.VITE_API_URL + "/sentences/passwords";
+      const values = [this.sentence1, this.sentence2, this.sentence3];
+
+      try {
+        const data = await postFormData(url, "POST", JSON.stringify(values));
+        this.passwords = data.passwords;
+      } catch (error) {
+        const err = JSON.parse(error.message);
+        this.error = err.message;
+        setTimeout(() => {
+          this.error = null;
+        }, 7000);
+      } finally {
+        this.loading = false;
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
+.legend {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.icon-button {
+  padding: 0.75rem;
+  line-height: 0;
+  color: #990f3d;
+  border: none;
+  box-sizing: border-box;
+  outline: 0;
+  margin: 0;
+  user-select: none;
+  background-color: transparent;
+  border-radius: 4px;
+  opacity: 0.8;
+  transition: all 200ms ease-out;
+}
+
+.icon-button:hover {
+  background-color: #f0eded;
+  cursor: pointer;
+  opacity: 1;
+}
+
 .field-error {
   color: red;
   width: 100%;
