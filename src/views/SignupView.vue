@@ -41,7 +41,11 @@
           >
             Third Sentence
           </text-input>
-          <Button label="submit"></Button>
+          <Button label="submit" :disabled="submitting">
+            <template #icon>
+              <Loading v-if="submitting" />
+            </template>
+          </Button>
         </fieldset>
       </form>
       <form
@@ -100,7 +104,11 @@
               {{ que.text }}
             </text-input>
           </div>
-          <Button label="submit"></Button>
+          <Button label="submit" :disabled="submitting">
+            <template #icon>
+              <Loading v-if="submitting" />
+            </template>
+          </Button>
         </fieldset>
       </form>
       <form v-else @submit.prevent="handleValidateUser">
@@ -130,7 +138,11 @@
         >
           Sex
         </select-input>
-        <Button label="submit"></Button>
+        <Button label="submit" :disabled="submitting">
+          <template #icon>
+            <Loading v-if="submitting" />
+          </template>
+        </Button>
       </form>
       <div class="footer">
         <small>

@@ -26,7 +26,11 @@
           >
             Password
           </text-input>
-          <Button label="submit"></Button>
+          <Button label="submit" :disabled="submitting">
+            <template #icon>
+              <Loading v-if="submitting" />
+            </template>
+          </Button>
         </form>
         <form v-else @submit.prevent="handleQuestionSubmit">
           <text-input
@@ -38,7 +42,11 @@
           >
             {{ question }}
           </text-input>
-          <Button label="submit"></Button>
+          <Button label="submit" :disabled="submitting">
+            <template #icon>
+              <Loading v-if="submitting" />
+            </template>
+          </Button>
         </form>
         <div class="footer">
           <small>
@@ -61,6 +69,7 @@
 <script>
 import Alert from "@/components/Alert.vue";
 import Button from "@/components/Button.vue";
+import Loading from "@/components/Loading.vue";
 import TextInput from "@/components/TextInput.vue";
 import { postFormData } from "../utils";
 
@@ -68,6 +77,7 @@ export default {
   components: {
     Alert,
     Button,
+    Loading,
     TextInput,
   },
   data() {

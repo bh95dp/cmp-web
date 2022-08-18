@@ -16,10 +16,15 @@
         </text-input>
         <Button
           v-if="!emailValidated"
-          type="button"
           label="submit"
+          type="button"
+          :disabled="submitting"
           @click="validateEmail"
-        ></Button>
+        >
+          <template #icon>
+            <Loading v-if="submitting" />
+          </template>
+        </Button>
         <text-input
           v-if="emailValidated"
           v-model="answer"
@@ -29,7 +34,11 @@
         >
           {{ question }}
         </text-input>
-        <Button v-if="emailValidated" label="submit"></Button>
+        <Button v-if="emailValidated" label="submit" :disabled="submitting">
+          <template #icon>
+            <Loading v-if="submitting" />
+          </template>
+        </Button>
       </form>
     </main>
   </div>
@@ -38,6 +47,7 @@
 <script>
 import Alert from "@/components/Alert.vue";
 import Button from "@/components/Button.vue";
+import Loading from "@/components/Loading.vue";
 import TextInput from "@/components/TextInput.vue";
 import { postFormData } from "../utils";
 
@@ -45,6 +55,7 @@ export default {
   components: {
     Alert,
     Button,
+    Loading,
     TextInput,
   },
   data() {
