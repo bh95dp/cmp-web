@@ -54,6 +54,7 @@
               Forgot your password?
             </router-link>
           </small>
+          <br />
           <small>
             Don&#39;t have an account?
             <router-link to="/signup">
